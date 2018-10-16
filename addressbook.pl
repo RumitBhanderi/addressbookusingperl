@@ -9,14 +9,17 @@ use Entry;
 package structure;
 
 our $list;
-our @entries;     
+our @entries;   
 
 sub AddEntry{
+
+
 my $entry =  new Entry();     
+#set object attributes
 
 print ( "Please enter in firstname: \n");
 my $first = <STDIN>;
-chomp $first;	
+chomp $first;	#truncate newline char
 $entry->firstName($first);
 
 print ("Lastname: \n");
@@ -24,13 +27,14 @@ my $last = <STDIN>;
 chomp $last;
 $entry->lastName($last);
 
-print("Home Phone: in the form xxxx-xxxxxx \n");
+print("Home Phone: in the form xxx-xxx-xxxx \n");
 	my $phone = <STDIN>;
 	chomp $phone;
 	
 	my $test = validatePhone ($phone);
 	if($test ne 0){
 	my @values = search($test,3);
+	
 	my $check = pop(@values);
 	
         if ($check){
@@ -44,7 +48,7 @@ print("Home Phone: in the form xxxx-xxxxxx \n");
 	while($flag == 0){
 		errorMessage();
 		my $newphone = prompt();
-		#must dereference hard reference to get string value use $$ 
+		
 		my $test = validatePhone($$newphone);
 
                 	if($test ne 0){
@@ -61,20 +65,20 @@ print("Home Phone: in the form xxxx-xxxxxx \n");
 			$entry->phone($test);
  			$flag=1;
 			}
-			}#end of test
+			}
 
 			if($flag == 1){ 
 
-			{last;} #break out of loop if received correct input
+			{last;}
 			}
 	}
 }
 
 
-print("Mobile phone in the form xx-xxxxxxxxxx \n");
+print("Mobile phone in the form xxx-xxx-xxxx \n");
 		my $mobile = <STDIN>;
 		chomp $mobile;
-		$test = validateMobile($mobile);
+		$test = validatePhone($mobile);
 		if($test ne 0){
 		$entry->mobile($test);
 		}else{
@@ -82,7 +86,6 @@ print("Mobile phone in the form xx-xxxxxxxxxx \n");
 		while($flag == 0){
 		errorMessage();
 		my $newmobile = prompt();
-		
 		my $test = validatePhone($$newmobile);
 
                 	if($test ne 0){
@@ -90,11 +93,11 @@ print("Mobile phone in the form xx-xxxxxxxxxx \n");
 			
 			$entry->mobile($test);
  			$flag=1;
-			}
+			}#end of test
 
 			if($flag == 1){ 
 
-			{last;} 
+			{last;} #break out of loop if received correct input
 			}
 	}
 }
@@ -105,7 +108,7 @@ chomp $address;
 $entry->address($address);
 
 
-print("Please enter a valid  Zipcode in the form xxxxxx \n");
+print("Please enter a valid  Zipcode in the form xxxxx or xxxxx-xxxx \n");
 my $zip = <STDIN>;
 		chomp $zip;
 		$test = validateZipcode($zip);
@@ -144,7 +147,7 @@ my $dob = <STDIN>;
 		while($flag == 0){
 		errorMessage();
 		my $newdate = prompt();
-		#must dereference hard reference to get string value use $$ 
+		
 		my $test = validateDate($$newdate);
 
                 	if($test ne 0){
@@ -152,11 +155,11 @@ my $dob = <STDIN>;
 			
 			$entry->dob($test);
  			$flag=1;
-			}#end of test
+			}
 
 			if($flag == 1){ 
 
-			{last;} #break out of loop if received correct input
+			{last;} 
 			}
 	}
 }
@@ -165,9 +168,6 @@ print ("Please enter this persons yearly salary \n");
 my $salary = <STDIN>;
 chomp $salary;
 $entry->salary($salary);
-
-
-
 push @entries, $entry;
 
   update();
@@ -175,7 +175,7 @@ push @entries, $entry;
 
 
 sub deleteFile{
-    
+   
     my $output="addressbook.txt";
     
     open(FH,">$output") || die("Cannot Open File");
@@ -198,10 +198,6 @@ $_->write();
 }
 
 }
-#******************************************************************
-#sorting routines
-#All user to sort by all fields
-#*****************************************************************
 
 sub sort{
 print("Please select field to sort by \n");
@@ -292,12 +288,10 @@ write;
 
 }
 
-
 sub load{
-	#create a flag to find errors when loading 
+	
 	my $loaded = 0;
 	my $tester;
-	
 	open (PWFILE,"addressbook.txt");
 	while (<PWFILE>) {
     	chomp;
@@ -306,13 +300,12 @@ sub load{
 	   
 	    my @names = split(" ", $fields[0]);
 
-            
 	    
 	    $loader->firstName($names[0]);
 	    $loader->lastName($names[1]);
             $loader->phone($fields[1]);
             $loader->mobile($fields[2]);
-            
+    
             my @zip = split(" ",$fields[3]);
             my $mystr="";
   	    my $str=0;
@@ -342,8 +335,6 @@ sub load{
 
 	}
 }
-
-
 sub traverse{
  my $counter=0;
 foreach(@entries){
@@ -366,28 +357,18 @@ $counter++;
 
 }
 
-sub validateMobile {
-   my $fh =shift;
-if($fh =~ /\d{2}-\d{10}/){
-return $&;
-}
-else{
-return 0;
-}
-}#end sub validatePhone
 sub validatePhone {
    my $fh =shift;
-if($fh =~ /\d{4}-\d{6}/){
+if($fh =~ /\d{3}-\d{3}-\d{4}/){
 return $&;
 }
 else{
 return 0;
 }
 }
-
 sub validateZipcode {
    my $fh =shift;
-if($fh =~ /(^\d{6}$)/){
+if($fh =~ /(^\d{5}$)|(^\d{5}-\d{4}$)/){
 return $&;
 }
 else{
@@ -396,7 +377,7 @@ return 0;
 }
 sub validateDate {
    my $fh =shift;
-if( $fh =~ /\b(0?[1-9]|[12][0-9]|3[01])[\-\/](1[0-2]|0?[1-9])[\-\/]((19|20)\d{2})/ ){
+if( $fh =~ /\b(1[0-2]|0?[1-9])[\-\/](0?[1-9]|[12][0-9]|3[01])[\-\/]((19|20)\d{2})/ ){
 
 return $&;
 }
@@ -404,7 +385,6 @@ else{
 return 0;
 }
 }
-
 sub deleteEntry{
 
 my $match = $_[0];
@@ -413,8 +393,9 @@ my $select = $_[1];
 chop $select;
 my $pos =0;
 my @matches;
+
 my $ans;
-print("\n"); 
+print("\n"); #space
 foreach (@entries){
 
 	if ( $select == 1){
@@ -513,6 +494,7 @@ return @matches;
 }
 
 sub deleteEntryPrompt{
+
 print("Delete Entry.....\n");
 print ("Please select a search criteria below to query entry you wish to delete...\n");
 print("first name                1\n");
@@ -580,6 +562,8 @@ chop $match;
 my $select = $_[1];
 
 my @matches;
+#print( $match );
+#print( $select );
 my $value = new Entry();
 foreach $value (@entries){
 
@@ -620,12 +604,15 @@ foreach $value (@entries){
 return @matches;
 
 }
+#*******************************************************************
+#Prompt Method
+#Get valid input from user interactively
+#*******************************************************************
 sub prompt{
 printf "Please enter valid data\n";
 my $input = <STDIN>;
 return \$input;
 }
-
 
 sub errorMessage{
 printf("Invalid Entry! Please try again.\n");
@@ -633,12 +620,11 @@ printf("Invalid Entry! Please try again.\n");
 
 package main;
 
-#load file 
 structure::load();
 for(;;){
 
 
-print ("\n	 AddressBook 		\n\n");
+print ("\n	 AddressBook Perl edition\n\n");
 print("Please choice one of the following Options: \n");
 print("Add a new entry            1\n");
 print("Delete an existing entry   2\n");
