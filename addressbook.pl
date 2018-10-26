@@ -515,7 +515,6 @@ deleteFile();
 deleteEntry($filter,$select);
 update();
 }
-
 sub query{
 
 print ("Please select a search criteria below\n");
@@ -546,8 +545,7 @@ Home Phone: @<<<<<<<<<<<<<<<<<<<<<<<	    Mobile Phone: @>>>>>>>>>>>>>>>
 Address:    @<<<<<<<<<<<<<<<<<<<<<<<	    Zip code:  @>>>>>>>>>>>>>>>>>>
       $_->address,			    	       $_->zipcode
 DOB:	    @<<<<<<<<<<<<<<<<<<<<<<<	    Salary:    @###############.##
-      $_->dob,					       $_->salary
-        
+      $_->dob,					       $_->salary       
 .
 write;
 $counter++;
@@ -599,10 +597,7 @@ foreach $value (@entries){
 	}
 
 }
-
-
 return @matches;
-
 }
 #*******************************************************************
 #Prompt Method
@@ -634,7 +629,6 @@ print("Exit                       6\n");
 
 my $input = <STDIN>;
 chop ($input);
-
 if($input){
 	
 	if ( $input == 1 ){
@@ -655,7 +649,6 @@ if($input){
 	if ( $input == 6 ) {
 	structure::update();
 		last;}
-	
 	}
 }	
 
